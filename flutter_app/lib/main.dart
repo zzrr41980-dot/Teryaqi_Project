@@ -339,7 +339,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildAuthCard() {
     return Card(
-      color: Colors.white.withValues(alpha: 0.95),
+      color: Colors.white.Opacity(0.95),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
