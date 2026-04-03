@@ -339,7 +339,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildAuthCard() {
     return Card(
-      color: Colors.white.Opacity(0.95),
+      color: Colors.white.withOpacity(0.95),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -531,7 +531,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(i, color: c.withValues(alpha: 0.3), size: 35),
+            Icon(i, color: c.withOpacity(0.3), size: 35),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
