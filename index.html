@@ -104,7 +104,7 @@
                     <option value="Male">ذكر</option>
                     <option value="Female">أنثى</option>
                 </select>
-                <input type="date" id="reg-dob" class="px-3 py-2 rounded-lg border border-gray-200">
+                <input type="text" id="reg-dob" placeholder="تاريخ الميلاد" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'" class="px-3 py-2 rounded-lg border border-gray-200 w-full text-right text-sm">
                 <input type="text" id="reg-phone" class="px-3 py-2 rounded-lg border border-gray-200" placeholder="الجوال (اختياري)">
             </div>
             <div class="flex flex-wrap gap-2 justify-end mt-6">
