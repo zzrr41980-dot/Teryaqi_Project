@@ -13,7 +13,7 @@ class TeriaqiApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ترياقي',
+      title:'تِرياقي',
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF065F46)),
@@ -488,7 +488,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              'ترياقي 🩺',
+              'تِرياقي ',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
