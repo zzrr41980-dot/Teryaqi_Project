@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تِرياقي - مركز التنبيهات الذكي</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Tajawal', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #0d9488 0%, #065f46 50%, #064e3b 100%);
+            min-height: 100vh;
+        }
+        .main-card { 
+            background: rgba(255, 255, 255, 0.98); 
+            border-radius: 30px; 
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2); 
+        }
+        .day-label input:checked + .day-dot { background-color: #0d9488; color: white; transform: scale(1.1); }
+        .day-dot { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f1f5f9; color: #64748b; font-size: 11px; font-weight: bold; transition: all 0.3s; cursor: pointer; }
+        .time-btn.active { border-color: #0d9488; background-color: #ecfdf5; color: #065f46; }
+        .progress-bar-fill { transition: width 0.5s ease-in-out, background-color 0.3s; }
+    </style>
+</head>
+<body class="pb-10">
+
+    <div class="relative z-10 max-w-2xl mx-auto px-4 pt-10">
+        
+        <div class="flex justify-between items-center mb-6 text-white">
+            <div>
+                <h1 class="text-2xl font-900">تِرياقي</h1>
+                <p class="text-emerald-200 text-xs">ضبط منبه الدواء</p>
+            </div>
+            <a href="index.html" class="bg-white/10 px-4 py-2 rounded-2xl text-xl backdrop-blur-md border border-white/20 hover:bg-white/30 transition-all"> الرئيسية</a>
+        </div>
+
+        <div class="main-card p-8 space-y-8">
+            
+            <div>
+                <h3 class="text-gray-800 font-bold mb-4 flex items-center gap-2 text-sm">📅 أيام الاسبوع</h3>
+                <div class="flex justify-between items-center bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                    <label class="day-label"><input type="checkbox" name="alarm_days" value="Sun" class="hidden"><span class="day-dot">الأحد</span></label>
+                    <label class="day-label"><input type="checkbox" name="alarm_days" value="Mon" class="hidden"><span class="day-dot">الاثنين</span></label>
+                    <label class="day-label"><input type="checkbox" name="alarm_days" value="Tue" class="hidden"><span class="day-dot">الثلاثاء</span></label>
+                    <label class="day-label"><input type="checkbox" name="alarm_days" value="Wed" class="hidden"><span class="day-dot">الأربعاء</span></label>
+                    <label class="day-label"><input type="checkbox" name="alarm_days" value="Thu" class="hidden"><span class="day-dot">الخميس</span></label>
+                    <label class="day-label"><input type="checkbox" name="alarm_days" value="Fri" class="hidden"><span class="day-dot">الجمعة</span></label>
+                    <label class="day-label"><input type="checkbox" name="alarm_days" value="Sat" class="hidden"><span class="day-dot">السبت</span></label>
+                </div>
+            </div>
+
+            <div class="bg-emerald-50/50 p-6 rounded-3xl border border-emerald-100 space-y-5">
+                <div class="flex justify-between items-center border-b border-emerald-100 pb-3">
+                    <h3 class="text-emerald-800 font-bold text-sm">إدارة مخزون العلبة</h3>
+                    <span class="text-[11px] bg-white text-emerald-600 px-3 py-1 rounded-full border border-emerald-200 font-bold shadow-sm">ذكي</span>
+                </div>
+                
+                <div>
+                    <p class="text-[10px] text-emerald-600 mb-1 font-bold italic">اسم الدواء المختار</p>
+                    <input type="text" id="med-name" placeholder="ادخل اسم الدواء هنا..." class="w-full bg-white px-4 py-3 rounded-xl text-sm font-bold text-emerald-900 border border-emerald-100 outline-none focus:ring-2 ring-emerald-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-[10px] text-emerald-600 mb-1 font-bold italic">سعة العلبة (شريط الدواء)</p>
+                        <input type="number" id="total-capacity" oninput="initStock()" placeholder="ادخل العدد الكلي" class="w-full bg-white px-4 py-3 rounded-xl text-sm font-black text-emerald-900 border border-emerald-100 outline-none focus:ring-2 ring-emerald-500">
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-emerald-600 mb-1 font-bold italic">الكمية المتبقية</p>
+                        <div class="flex items-center gap-2 bg-white p-1 rounded-xl border border-emerald-100">
+                            <button onclick="updatePills(-1)" class="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-lg text-xl hover:bg-gray-200 font-bold text-emerald-700">-</button>
+                            <span id="pills-count" class="flex-1 text-center text-xl font-black text-emerald-900">0</span>
+                            <button onclick="updatePills(1)" class="w-10 h-10 flex items-center justify-center bg-emerald-600 text-white rounded-lg text-xl hover:bg-emerald-700 font-bold">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
+                        <div id="pills-progress" class="progress-bar-fill h-full bg-emerald-600" style="width: 0%;"></div>
+                    </div>
+                    
+                    <div id="stock-alert" class="hidden items-center gap-3 p-3 rounded-2xl border transition-all shadow-sm">
+                        <span id="alert-icon" class="text-lg"></span>
+                        <span id="alert-text" class="text-[11px] font-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-5 rounded-3xl border border-gray-100">
+                    <p class="text-[10px] font-bold text-gray-400 mb-2">وقت الجرعة الأساسي</p>
+                    <input type="time" id="main-alarm-time" class="w-full bg-transparent text-2xl font-bold text-emerald-900 outline-none cursor-pointer" value="10:00">
+                </div>
+                <div class="bg-emerald-50 p-5 rounded-3xl border border-emerald-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-emerald-800">إشعار صوتي</p>
+                        <p class="text-[10px] text-emerald-600">تنبيه واهتزاز</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="voice-alert" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-emerald-600 peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-0.5 after:right-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-gray-800 font-bold mb-4 flex items-center gap-2 text-sm">🔔 تذكير إضافي قبل الموعد</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" onclick="toggleTime(this, 15)" class="time-btn py-4 rounded-2xl border-2 border-gray-100 text-gray-400 font-bold text-xs transition-all hover:bg-emerald-50 hover:border-emerald-200">بـ 15 دقيقة</button>
+                    <button type="button" onclick="toggleTime(this, 30)" class="time-btn py-4 rounded-2xl border-2 border-gray-100 text-gray-400 font-bold text-xs transition-all hover:bg-emerald-50 hover:border-emerald-200">بـ 30 دقيقة</button>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-gray-100">
+                <h3 class="text-red-700 font-bold mb-4 flex items-center gap-2 text-sm">⚠️ تنبيهات لم يتم تأكيدها</h3>
+                <div id="missed-alarms-list" class="space-y-3">
+                    <div class="p-5 bg-red-50 rounded-[24px] border border-red-100 flex items-center justify-between shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-xl shadow-sm">⚠️</div>
+                            <div>
+                                <p class="text-xs font-bold text-red-900">لم يتم تسجيل أخذ الجرعة!</p>
+                                <p class="text-[9px] text-red-500">تناولها قبل قليل</p>
+                            </div>
+                        </div>
+                        <button onclick="confirmTaken(this)" class="bg-red-600 text-white text-[10px] px-4 py-2.5 rounded-xl font-bold active:scale-95 transition-all">أخذت الآن</button>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="saveToDatabase()" class="w-full py-5 bg-emerald-600 text-white rounded-[24px] font-800 text-lg shadow-xl hover:bg-emerald-700 active:scale-95 transition-all">
+                حفظ وتفعيل التنبيه  
+            </button>
+
+        </div>
+    </div>
+
+    <script>
+        let currentPills = 0;
+        let maxPills = 0;
+
+        function initStock() {
+            maxPills = parseInt(document.getElementById('total-capacity').value) || 0;
+            currentPills = maxPills; 
+            updateUI();
+        }
+
+        function updatePills(change) {
+            if (maxPills === 0) {
+                alert("يرجى إدخال سعة الشريط/العلبة أولاً ⚠️");
+                return;
+            }
+            currentPills = Math.min(maxPills, Math.max(0, currentPills + change));
+            updateUI();
+        }
+
+        function updateUI() {
+            const countElement = document.getElementById('pills-count');
+            const progressElement = document.getElementById('pills-progress');
+            const alertBox = document.getElementById('stock-alert');
+            const alertText = document.getElementById('alert-text');
+            const alertIcon = document.getElementById('alert-icon');
+
+            countElement.innerText = currentPills;
+            const percentage = maxPills > 0 ? (currentPills / maxPills) * 100 : 0;
+            progressElement.style.width = percentage + '%';
+
+            // التنبيه يبدأ من 5 حبات وأقل
+            if (currentPills <= 5 && currentPills > 0) {
+                alertBox.classList.remove('hidden');
+                alertBox.classList.add('flex');
+                if (currentPills === 1) {
+                    alertBox.className = "flex items-center gap-3 p-3 rounded-2xl border border-red-200 bg-red-50 text-red-700 animate-pulse";
+                    alertIcon.innerText = "🚨";
+                    alertText.innerText = "تحذير: تبقى حبة واحدة فقط!";
+                    progressElement.style.backgroundColor = "#ef4444";
+                } else {
+                    alertBox.className = "flex items-center gap-3 p-3 rounded-2xl border border-orange-200 bg-orange-50 text-orange-700";
+                    alertIcon.innerText = "⚠️";
+                    alertText.innerText = `تنبيه: متبقي ${currentPills} حبات فقط.`;
+                    progressElement.style.backgroundColor = "#f97316";
+                }
+            } else if (currentPills === 0 && maxPills > 0) {
+                alertBox.className = "flex items-center gap-3 p-3 rounded-2xl border border-gray-300 bg-gray-100 text-gray-600";
+                alertIcon.innerText = "❌";
+                alertText.innerText = "المخزون نفذ تماماً!";
+                alertBox.classList.remove('hidden');
+            } else {
+                alertBox.classList.add('hidden');
+                progressElement.style.backgroundColor = "#059669";
+            }
+        }
+
+        function toggleTime(btn, mins) {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-600'));
+            btn.classList.add('active', 'border-emerald-500', 'bg-emerald-50', 'text-emerald-600');
+        }
+
+        function confirmTaken(btn) {
+            const card = btn.closest('div');
+            card.style.opacity = '0';
+            setTimeout(() => card.remove(), 300);
+            updatePills(-1);
+            alert("تم تأكيد الجرعة وتحديث المخزون ✅");
+        }
+
+        function saveToDatabase() {
+            const name = document.getElementById('med-name').value;
+            if(!name) { alert("يرجى إدخال اسم الدواء"); return; }
+            alert(`تم حفظ منبه ${name} بنجاح! `);
+        }
+    </script>
+</body>
+</html>
