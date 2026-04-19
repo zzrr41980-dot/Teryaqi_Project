@@ -301,6 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
       await apiAddSchedule(pmId, timeVal);
       await refreshMedicines();
       e.target.reset();
+        window.location.href = "medications_list.html";
     } catch (err) {
       showError(err.message);
     }
